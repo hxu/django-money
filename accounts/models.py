@@ -18,12 +18,16 @@ class Person(models.Model):
 
 class Account(models.Model):
     name = models.CharField(max_length=100)
-    currency = models.ForeignKey(Currency)
-    account_type = models.ForeignKey(AccountType)
+    currency = models.ForeignKey(Currency, related_name='accounts')
+    account_type = models.ForeignKey(AccountType, related_name='accounts')
     owner = models.ForeignKey(Person)
 
     class Meta:
         ordering = ['name', 'owner']
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=25)
 
 
 class Transaction(models.Model):
@@ -31,6 +35,7 @@ class Transaction(models.Model):
     description = models.CharField(max_length=100)
     account = models.ForeignKey(Account)
     amount = models.FloatField()
+    tags = models.ManyToManyField(Tag, related_name='transactions')
 
     class Meta:
         ordering = ['date', 'account']
